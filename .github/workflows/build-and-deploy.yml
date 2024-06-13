@@ -23,7 +23,10 @@ jobs:
       - name: Create .env file
         run: echo "VITE_WORDPRESS_API_BASE_URL=$VITE_WORDPRESS_API_BASE_URL" > environments/.env
         env:
-          API_URL: ${{ secrets.VITE_WORDPRESS_API_BASE_URL }}
+          VITE_WORDPRESS_API_BASE_URL: ${{ secrets.VITE_WORDPRESS_API_BASE_URL }}
+
+      - name: Print .env for debug
+        run: cat environments/.env
 
       - name: Build the project
         run: npm run build
