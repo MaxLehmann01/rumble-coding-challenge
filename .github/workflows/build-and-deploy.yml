@@ -42,5 +42,5 @@ jobs:
           name: dist
           path: ./dist/
 
-      - name: Copy docker-Compose.yml
-        run: scp -o StrictHostKeyChecking=no ./dist/* root@${{ secrets.SSH_IP }}:~/wordpress/data/wp-content/plugins/rumble-news-feed/build/
+      - name: Copy App
+        run: scp -r -o StrictHostKeyChecking=no ./dist/* root@${{ secrets.SSH_IP }}:~/wordpress/data/wp-content/plugins/rumble-news-feed/build/
