@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  rumble-news-feed:
+    image: docker.5vv5404h4uiv.com/rumble-news-feed:latest
+    container_name: rumble-news-feed
+    restart: always
+    ports:
+      - "4020:80"
+    environment:
+      - "TZ=Europe/Berlin"

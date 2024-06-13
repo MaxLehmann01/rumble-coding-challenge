@@ -56,4 +56,5 @@
 
 ### Deployment
 
-> [Github-Actions](https://github.com/features/actions): On-Push Pipeline, welche die React App baut und diese per SSH auf einen Remote-Server in das Wordpress Plugin-Verzeichnis kopiert
+> [Docker](https://www.docker.com/): Containerisierungsplatform
+> [Github-Actions](https://github.com/features/actions): On-Push Pipeline, welche die React App baut, diese in einen Docker-Container verpackt, den Docker-Container deployed und parallel die App in Wordpress deployed.
