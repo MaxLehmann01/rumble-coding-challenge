@@ -1,0 +1,46 @@
+name: Build-And-Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-app: 
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20' # Specify the Node.js version you want to use
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Upload dist as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: ./dist/
+
+  deploy-app:
+    needs: build-app
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download dist from artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: ./dist/
+
+      - name: Copy docker-Compose.yml
+        run: scp -o StrictHostKeyChecking=no ./dist/* root@${{ secrets.SSH_IP }}:~/wordpress/data/wp-content/plugins/rumble-news-feed/build/
