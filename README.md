@@ -70,6 +70,26 @@ Einmal per WordPress und einmal direkt als React-App via Docker. \
 > [https://wordpress.maxlehmann.dev](https://wordpress.max.lehmann.dev): WordPress \
 > [https://rumble-news-feed.maxlehmann.dev](https://rumble-news-feed.maxlehmann.dev): React-App (Docker)
 
+## Anwedung selbst austesten
+
+> Um die Anwendung selbst auszutesten, müssen folgende Schritte beachtet werden.
+
+### 1. Repository klonen
+
+> Zunächst muss das Repository mit folgendem Befehl geklont werden `git clone https://github.com/MaxLehmann01/rumble-coding-challenge.git`.
+
+### 2. Dependencies installieren
+
+> Navigiere in das Projektverzeichnis und führe `npm install` aus.
+
+### 3. .env erstellen
+
+> Navigiere in den ***environments*** Ordner und kopiere die ***.env.example*** Datei, bennene diese in ***.env*** um und fülle die jeweiligen Umgebungsvariablen.
+
+### 4. Entwicklungsserver starten
+
+> State den Entwicklungsserver mit dem Befehl `npm run dev`.
+
 ## Fragen / Antworten
 
 ### Wenn du mehr Zeit gehabt hättest, was hättest du anders gemacht?
