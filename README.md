@@ -1,3 +1,7 @@
+| Branch | Pipeline | Healthcheck | Version |
+| - | - | - | - |
+| main | [![pipeline](https://github.com/MaxLehmann01/rumble-coding-challenge/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/MaxLehmann01/rumble-coding-challenge/commit/main) | [![healthcheck](https://gcb.maxlehmann.dev/badges/healthcheck?url=https://wordpress.maxlehmann.dev)](https://wordpress.maxlehmann.dev) [![healthcheck](https://gcb.maxlehmann.dev/badges/healthcheck?url=https://rumble-news-feed.maxlehmann.dev)](https://rumble-news-feed.maxlehmann.dev) | [![version](https://gcb.maxlehmann.dev/badges/version?project=rumble-coding-challenge)](https://github.com/MaxLehmann01/rumble-coding-challenge/tree/main) |
+
 # Rumble Coding Challenge (Rumble News Feed)
 
 ## Aufgabenstellung
