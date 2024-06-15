@@ -1,53 +1,65 @@
 import { Alert, CircularProgress, Snackbar } from "@mui/material";
+import { AxiosRequestConfig } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useAlert from "../../hooks/useAlert";
 import { tAuthor } from "../../types/tAuthor";
-import { tAuhtorFetched } from "../../types/tAuthorFetched";
+import { tAuhtorOG } from "../../types/tAuthorOG";
 import { tCategory } from "../../types/tCategory";
 import { tImage } from "../../types/tImage";
 import { tPost } from "../../types/tPost";
-import { tPostFetched } from "../../types/tPostFetched";
+import { tPostOG } from "../../types/tPostOG";
 import WordPressAPI from "../../utils/WordPressAPI";
 import FeedCard from "./FeedCard";
 
 const Feed = () => {
   const {alert, setAlert} = useAlert();
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const [posts, setPosts] = useState<tPost[]>([]);
-  const [page, setPage] = useState<number>(1);
+  const [postsPage, setPostsPage] = useState<number>(1);
   const [hasMorePosts, setHasMorePosts] = useState<boolean>(true);
 
   const scrollTimeout = useRef<number | null>(null);
   const scrollContainer = useRef<HTMLDivElement>(null);
 
-  const fetchPosts = useCallback(async (page: number) => {
-    const perPage = 12;
-    const fields = ['id', 'title', 'date', 'author', 'categories', 'featured_media', 'link'].join(',');
-    const orderBy = 'date';
-    const order = 'desc';
+  const fetchPosts = useCallback(async (pageNumber: number) => {
+    const reqConfig: AxiosRequestConfig = {
+      params: {
+        per_page: 12,
+        orderby: 'date',
+        order: 'desc',
+        _fields: ['id', 'title', 'date', 'author', 'categories', 'featured_media', 'link'].join(','),
+        page: pageNumber
+      }
+    }
 
     try {
+      // Fetching-Zustand setzen, damit beim Scrollen keine weiteren Requests gemacht werden.
       setIsFetching(true);
-      const response = await WordPressAPI.get(`/posts?per_page=${perPage}&orderby=${orderBy}&order=${order}&_fields=${fields}&page=${page}`);
+      
+      const response = await WordPressAPI.get(`/posts`, reqConfig);
       if(response.data.length === 0) {
         setHasMorePosts(false);
         setIsFetching(false);
         return;
       }
 
-      const authorIds: number[] = response.data.map((post: tPostFetched) => post.author);
-      const categoryIds: number[] = response.data.flatMap((post: tPostFetched) => post.categories);
-      const imageIds: number[] = response.data.map((post: tPostFetched) => post.featured_media);
+      // IDs der Autoren, Kategorien und Bilder extrahieren
+      const authorIds: number[] = response.data.map((post: tPostOG) => post.author);
+      const categoryIds: number[] = response.data.flatMap((post: tPostOG) => post.categories);
+      const imageIds: number[] = response.data.map((post: tPostOG) => post.featured_media);
 
+      // Autoren, Kategorien und Bilder von WordPress-API abrufen
       const [authors, categories, images]: [tAuthor[], tCategory[], tImage[]] = await Promise.all([
         fetchAuthors(authorIds),
         fetchCategories(categoryIds),
         fetchImages(imageIds),
       ]);
 
-      const postsTranformed: tPost[] = response.data.map((post: tPostFetched) => ({
+      // Posts in anderes Format transformieren
+      const postsTranformed: tPost[] = response.data.map((post: tPostOG) => ({
         id: post.id,
         title: post.title.rendered,
         url: post.link,
@@ -58,11 +70,13 @@ const Feed = () => {
       }));
 
       setPosts((prevPosts) => [...prevPosts, ...postsTranformed]);
+
       setIsLoading(false);
       setIsFetching(false);
     } catch (err) {
       setIsLoading(false);
       setIsFetching(false);
+
       setAlert({
         severity: 'error',
         children: 'Posts konnten nicht geladen werden.'
@@ -71,14 +85,20 @@ const Feed = () => {
   }, [setAlert]);
 
   const fetchAuthors = async (ids: number[]) => {
+    
+    // Mehrfach auftretende IDs entfernen
     const uniqueIds = Array.from(new Set(ids));
 
-    const perPage = uniqueIds.length;
-    const include = uniqueIds.join(',');
-    const fields = ['id', 'name', 'link', 'avatar_urls'].join(',');
-    
-    const response = await WordPressAPI.get(`/users?per_page=${perPage}&include=${include}&_fields=${fields}`);
-    return response.data.map((author: tAuhtorFetched) => ({
+    const reqConfig: AxiosRequestConfig = {
+      params: {
+        per_page: uniqueIds.length,
+        _fields: ['id', 'name', 'link', 'avatar_urls'].join(','),
+        include: uniqueIds.join(',')
+      }
+    }
+
+    const response = await WordPressAPI.get(`/users`, reqConfig);
+    return response.data.map((author: tAuhtorOG) => ({
       id: author.id,
       name: author.name,
       url: author.link,
@@ -87,32 +107,45 @@ const Feed = () => {
   }
 
   const fetchCategories = async (ids: number[]) => {
+
+    // Mehrfach auftretende IDs entfernen
     const uniqueIds = Array.from(new Set(ids));
 
-    const perPage = uniqueIds.length;
-    const include = uniqueIds.join(',');
-    const fields = ['id', 'name'].join(',');
+    const reqConfig: AxiosRequestConfig = {
+      params: {
+        per_page: uniqueIds.length,
+        _fields: ['id', 'name'].join(','),
+        include: uniqueIds.join(',')
+      }
+    }
 
-    const response = await WordPressAPI.get(`/categories?per_page=${perPage}&include=${include}&_fields=${fields}`);
+    const response = await WordPressAPI.get(`/categories`, reqConfig);
     return response.data;
   }
 
   const fetchImages = async (ids: number[]) => {
+
+    // Mehrfach auftretende IDs entfernen
     const uniqueIds = Array.from(new Set(ids));
 
-    const perPage = uniqueIds.length;
-    const include = uniqueIds.join(',');
-    const fields = ['id', 'source_url', 'alt_text'].join(',');
+    const reqConfig: AxiosRequestConfig = {
+      params: {
+        per_page: uniqueIds.length,
+        _fields: ['id', 'source_url', 'alt_text'].join(','),
+        include: uniqueIds.join(',')
+      }
+    }
 
-    const response = await WordPressAPI.get(`/media?per_page=${perPage}&include=${include}&_fields=${fields}`);
+    const response = await WordPressAPI.get(`/media`, reqConfig);
     return response.data;
   }
 
   useEffect(() => {
     const handleScroll = () => {
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
+      // Timeout, damit nicht bei jedem Scroll-Event ein Request gemacht wird
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+        
+      // Wenn am Ende des Containers gescrollt wird und es noch mehr Posts gibt, dann weitere Posts laden
       scrollTimeout.current = setTimeout(() => {
         if (
           scrollContainer.current &&
@@ -120,29 +153,25 @@ const Feed = () => {
           hasMorePosts &&
           !isFetching
         ) {
-          setPage((prevPage) => prevPage + 1);
+          setPostsPage((prevPostPage) => prevPostPage + 1);
         }
       }, 50);
     };
 
     const scrollableDiv = scrollContainer.current;
-    if (scrollableDiv) {
-      scrollableDiv.addEventListener('scroll', handleScroll);
-    }
+    if (scrollableDiv) scrollableDiv.addEventListener('scroll', handleScroll);
+      
     return () => {
-      if (scrollableDiv) {
-        scrollableDiv.removeEventListener('scroll', handleScroll);
-      }
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
+      if (scrollableDiv) scrollableDiv.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
     };
   }, [hasMorePosts, isFetching]);
 
   useEffect(() => {
-    fetchPosts(page);
-  }, [fetchPosts, page]);
+    fetchPosts(postsPage);
+  }, [fetchPosts, postsPage]);
 
+  // Während des Ladens der ersten Posts
   if(isLoading && posts.length === 0) {
     return (
       <div className="h-full w-full flex justify-center items-center">

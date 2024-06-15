@@ -1,4 +1,4 @@
-export type tPostFetched = {
+export type tPostOG = {
   id: number,
   title: {
     rendered: string

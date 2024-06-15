@@ -108,10 +108,15 @@ Einmal per WordPress und einmal direkt als React-App via Docker. \
 
 ### Was bedeutet für dich "Clean Code" und wendest du dies an? Wenn Ja, was davon?
 
-> "Clean Code" bedeutet für mich, dass Code im gesamten Projekt gleich strukturiert und dadurch einfach zu lesen ist. \
-> Beispielsweise gehe ich bei meinen React-Projekten in Komponenten immer nach folgender Reihenfolge vor:
+> "Clean Code" ist für mich eine Zusammensetzung aus vielen Faktoren. \
+> \
+> In erster Linie sollten sprechende Variablennamen sowie (falls vorhanden) Typisierung verwendet werden. \
+> Zusätzlich ist es wichtig, aussagekräftige Kommentare an sinnvollen Stellen zu verwenden. \
+> \
+> Außerdem ist mir eine feste Projektstruktur in Bezug auf Datei- und Ordnerstruktur, aber auch im Code selbst, sehr wichtig. \
+> Beispielsweise gehe ich bei meinen React-Projekten in Komponenten immer nach folgender Struktur vor: \
 >
-> 1. Import Custom-Hooks
+> 1. Import von Custom-Hooks
 > 2. Deklaration/Initialisierung von States und References
 > 3. API-Fetch-Funktionen
 > 4. Handler-Funktionen

@@ -1,7 +1,7 @@
-const TimestampConverter = (timestamp: string, format: string, writeTodayYesterday: boolean = false) => {
+const TimestampConverter = (timestamp: string, format: string, writeOutTodayYesterday: boolean = false) => {
   const datetime = new Date(timestamp);
 
-  if(writeTodayYesterday) {
+  if(writeOutTodayYesterday) {
     const tsToday = new Date();
     const tsYesterday = new Date();
     tsYesterday.setDate(tsToday.getDate() - 1);

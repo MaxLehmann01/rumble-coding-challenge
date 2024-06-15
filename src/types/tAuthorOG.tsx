@@ -1,4 +1,4 @@
-export type tAuhtorFetched = {
+export type tAuhtorOG = {
   id: number,
   name: string,
   link: string,

@@ -1,5 +1,6 @@
 import { Public } from "@mui/icons-material";
 import { Avatar, Paper, Typography } from "@mui/material";
+import { memo } from "react";
 import { tPost } from "../../types/tPost";
 import TimestampConverter from "../../utils/TimestampConverter";
 
@@ -7,7 +8,7 @@ type tFeedCardProps = {
   post: tPost
 }
 
-const FeedCard = ({post}: tFeedCardProps) => {
+const FeedCard = memo(({post}: tFeedCardProps) => {
   return (
     <Paper
       elevation={3}
@@ -18,12 +19,13 @@ const FeedCard = ({post}: tFeedCardProps) => {
           <a 
             href={post.author.url}
             target="_blank"
-          >
-            <Avatar
-              src={post.author.avatar || ''}
-              alt={`Avatar of ${post.author.name}`}
-            />
-          </a>
+            children={(
+              <Avatar
+                src={post.author.avatar || ''}
+                alt={`Avatar of ${post.author.name}`}
+              />
+            )}
+          />
           <div className="flex flex-col">
             <Typography 
               variant="body2"
@@ -38,9 +40,12 @@ const FeedCard = ({post}: tFeedCardProps) => {
         <a 
           href={post.url}
           target="_blank"
-        >
-          <Public className="text-gray-400" />
-        </a>
+          children={(
+            <Public 
+              className="text-gray-400" 
+            />
+          )}
+        />
       </div>
       <Typography
         variant="h5"
@@ -63,10 +68,10 @@ const FeedCard = ({post}: tFeedCardProps) => {
         >
           <span className="font-medium">Kategorien: </span>
           {post.categories.map(category => category.name).join(', ')}
-          </Typography>
+        </Typography>
       </div>
     </Paper>
   )
-}
+})
 
 export default FeedCard;
