@@ -3,6 +3,7 @@ import { Avatar, Paper, Typography } from "@mui/material";
 import { memo } from "react";
 import { tPost } from "../../types/tPost";
 import TimestampConverter from "../../utils/TimestampConverter";
+import ProgressiveImage from "../../Image/ProgressiveImage";
 
 type tFeedCardProps = {
   post: tPost
@@ -54,11 +55,8 @@ const FeedCard = memo(({post}: tFeedCardProps) => {
         children={post.title}
       />
       {post.image && (
-        <img
-          src={post.image.source_url}
-          alt={post.image.alt_text}
-          loading="lazy"
-          className="h-auto w-full max-w-full object-cover rounded-md shadow-md"
+        <ProgressiveImage
+          image={post.image}
         />
       )}
       <div>

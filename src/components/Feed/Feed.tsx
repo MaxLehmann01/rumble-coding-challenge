@@ -10,6 +10,7 @@ import { tPost } from "../../types/tPost";
 import { tPostOG } from "../../types/tPostOG";
 import WordPressAPI from "../../utils/WordPressAPI";
 import FeedCard from "./FeedCard";
+import { tImageOG } from "../../types/tImageOG";
 
 const Feed = () => {
   const {alert, setAlert} = useAlert();
@@ -123,7 +124,7 @@ const Feed = () => {
     return response.data;
   }
 
-  const fetchImages = async (ids: number[]) => {
+  const fetchImages = async (ids: number[]): Promise<tImage[]> => {
 
     // Mehrfach auftretende IDs entfernen
     const uniqueIds = Array.from(new Set(ids));
@@ -131,13 +132,18 @@ const Feed = () => {
     const reqConfig: AxiosRequestConfig = {
       params: {
         per_page: uniqueIds.length,
-        _fields: ['id', 'source_url', 'alt_text'].join(','),
+        _fields: ['id', 'media_details', 'alt_text'].join(','),
         include: uniqueIds.join(',')
       }
     }
 
     const response = await WordPressAPI.get(`/media`, reqConfig);
-    return response.data;
+    return response.data.map((image: tImageOG) => ({
+      id: image.id,
+      thumbnail: image.media_details.sizes.thumbnail,
+      full: image.media_details.sizes.full,
+      alt_text: image.alt_text
+    }));
   }
 
   useEffect(() => {

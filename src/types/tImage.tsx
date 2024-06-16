@@ -1,5 +1,14 @@
 export type tImage = {
   id: number,
-  source_url: string,
+  thumbnail: {
+    height: number,
+    width: number
+    source_url: string,
+  },
+  full: {
+    height: number,
+    width: number
+    source_url: string,
+  },
   alt_text: string
 }
