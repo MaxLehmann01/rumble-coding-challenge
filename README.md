@@ -49,7 +49,7 @@ Zusätzlich werden, wenn der Benutzer nach unten scrollt, immer wieder die näch
 
 > [ReactJS](https://react.dev/): Frontend-Framework \
 > [TailwindCSS](https://tailwindcss.com/): Klassenbasiertes CSS-Framework \
-> [MaterialUI](https://mui.com/): Komponentenbibliothek
+> [MaterialUI](https://mui.com/): Komponentenbibliothek \
 > [Vite](https://vitejs.dev/): Lokaler Entwicklungsserver
 
 ### Zusätzliche npm-packages
