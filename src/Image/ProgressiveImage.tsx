@@ -38,6 +38,7 @@ const ProgressiveImage = ({ image }: tProgressiveImageProps) => {
         src={image.full.source_url}
         alt={image.alt_text}
         className="object-cover"
+        loading="lazy"
         onLoad={() => setIsLoaded(true)}
         style={{
           position: 'absolute',
