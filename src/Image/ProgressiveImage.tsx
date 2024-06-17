@@ -11,29 +11,16 @@ const ProgressiveImage = ({ image }: tProgressiveImageProps) => {
   const aspectRatio = (image.full.height / image.full.width) * 100;
 
   useEffect(() => {
-    console.log(`isLoaded changed: ${isLoaded}`);
-    
-  }, [isLoaded])
-
-  useEffect(() => {
-    const handleImageLoad = () => {
-      setIsLoaded(true);
-    };
+    const handleImageLoad = () => setIsLoaded(true);
 
     const img = imgRef.current;
     if (img) {
       img.addEventListener('load', handleImageLoad);
-      
-      if (img.complete) {
-        // If the image is already loaded
-        handleImageLoad();
-      }
+      if (img.complete) handleImageLoad();
     }
 
     return () => {
-      if (img) {
-        img.removeEventListener('load', handleImageLoad);
-      }
+      if (img) img.removeEventListener('load', handleImageLoad);
     };
   }, []);
 
