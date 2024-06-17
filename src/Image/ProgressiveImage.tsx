@@ -51,30 +51,19 @@ const ProgressiveImage = ({ image }: tProgressiveImageProps) => {
         ref={imgRef}
         src={image.thumbnail.source_url}
         alt={image.alt_text}
-        className="object-cover"
+        className="h-full w-full absolute top-0 left-0 object-cover"
         style={{
           filter: isLoaded ? 'none' : 'blur(20px)',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
+          transition: 'filter 0.5s ease-out',
         }}
       />
       <img
         src={image.full.source_url}
         alt={image.alt_text}
-        className="object-cover"
-        loading="lazy"
+        className="h-full w-full absolute top-0 left-0 object-cover"
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          display: isLoaded ? 'block' : 'none',
+          opacity: isLoaded ? 1 : 0,
+          transition: 'opacity 0.5s ease-out',
         }}
       />
     </div>
