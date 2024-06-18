@@ -1,4 +1,4 @@
-import { Alert, CircularProgress, Snackbar } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { AxiosRequestConfig } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useAlert from "../../hooks/useAlert";
@@ -6,14 +6,14 @@ import { tAuthor } from "../../types/tAuthor";
 import { tAuhtorOG } from "../../types/tAuthorOG";
 import { tCategory } from "../../types/tCategory";
 import { tImage } from "../../types/tImage";
+import { tImageOG } from "../../types/tImageOG";
 import { tPost } from "../../types/tPost";
 import { tPostOG } from "../../types/tPostOG";
 import WordPressAPI from "../../utils/WordPressAPI";
 import FeedCard from "./FeedCard";
-import { tImageOG } from "../../types/tImageOG";
 
 const Feed = () => {
-  const {alert, setAlert} = useAlert();
+  const {setAlert} = useAlert();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -74,6 +74,8 @@ const Feed = () => {
 
       setIsLoading(false);
       setIsFetching(false);
+
+      setAlert(null);
     } catch (err) {
       setIsLoading(false);
       setIsFetching(false);
@@ -191,21 +193,6 @@ const Feed = () => {
       className="h-full w-full flex flex-wrap gap-4 p-4 relative overflow-y-auto" 
       ref={scrollContainer}
     >
-      { alert && (
-        <Snackbar
-          open={alert !== null}
-          autoHideDuration={5000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          onClose={() => setAlert(null)}
-          children={
-            <Alert 
-              severity={alert?.severity} 
-              icon={alert?.icon} 
-              children={alert?.children} 
-            />
-          }
-        />
-      )}
       {posts.map((post: tPost) => (
         <FeedCard
           key={post.id}

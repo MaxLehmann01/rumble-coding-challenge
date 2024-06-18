@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { tImage } from "../types/tImage";
+import { memo, useEffect, useRef, useState } from "react";
+import { tImage } from "../../types/tImage";
 
-type tProgressiveImageProps = {
+type tLazyImageProps = {
   image: tImage,
 }
 
-const ProgressiveImage = ({ image }: tProgressiveImageProps) => {
+const LazyImage = memo(({ image }: tLazyImageProps) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const imgRef = useRef<HTMLImageElement>(null);
   const aspectRatio = (image.full.height / image.full.width) * 100;
@@ -55,6 +55,6 @@ const ProgressiveImage = ({ image }: tProgressiveImageProps) => {
       />
     </div>
   )
-}
+})
 
-export default ProgressiveImage;
+export default LazyImage;

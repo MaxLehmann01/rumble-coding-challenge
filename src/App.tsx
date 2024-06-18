@@ -1,14 +1,14 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import Feed from "./components/Feed/Feed";
-import Theme from "./themes/Theme";
+import Layout from "./components/Layout/Layout";
 import AlertProvider from "./providers/AlertProvider";
+import Theme from "./themes/Theme";
 
 const App = () => {
   return (
     <ThemeProvider theme={Theme}>
       <CssBaseline />
       <AlertProvider>
-        <Feed />
+        <Layout />
       </AlertProvider>
     </ThemeProvider>
   )

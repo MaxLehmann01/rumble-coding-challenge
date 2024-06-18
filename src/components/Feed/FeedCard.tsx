@@ -3,7 +3,7 @@ import { Avatar, Paper, Typography } from "@mui/material";
 import { memo } from "react";
 import { tPost } from "../../types/tPost";
 import TimestampConverter from "../../utils/TimestampConverter";
-import ProgressiveImage from "../../Image/ProgressiveImage";
+import LazyImage from "../Image/LazyImage";
 
 type tFeedCardProps = {
   post: tPost
@@ -55,7 +55,7 @@ const FeedCard = memo(({post}: tFeedCardProps) => {
         children={post.title}
       />
       {post.image && (
-        <ProgressiveImage
+        <LazyImage
           image={post.image}
         />
       )}
