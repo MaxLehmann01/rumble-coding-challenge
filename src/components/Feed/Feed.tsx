@@ -25,6 +25,67 @@ const Feed = () => {
   const scrollTimeout = useRef<number | null>(null);
   const scrollContainer = useRef<HTMLDivElement>(null);
 
+  const fetchAuthors = useCallback(async (ids: number[]) => {
+    
+    // Mehrfach auftretende IDs entfernen
+    const uniqueIds = Array.from(new Set(ids));
+
+    const reqConfig: AxiosRequestConfig = {
+      params: {
+        per_page: uniqueIds.length,
+        _fields: ['id', 'name', 'link', 'avatar_urls'].join(','),
+        include: uniqueIds.join(',')
+      }
+    }
+
+    const response = await WordPressAPI.get(`/users`, reqConfig);
+    return response.data.map((author: tAuhtorOG) => ({
+      id: author.id,
+      name: author.name,
+      url: author.link,
+      avatar: author.avatar_urls[96] || author.avatar_urls[48] || author.avatar_urls[24] || null
+    }));
+  }, [])
+
+  const fetchCategories = useCallback(async (ids: number[]) => {
+
+    // Mehrfach auftretende IDs entfernen
+    const uniqueIds = Array.from(new Set(ids));
+
+    const reqConfig: AxiosRequestConfig = {
+      params: {
+        per_page: uniqueIds.length,
+        _fields: ['id', 'name'].join(','),
+        include: uniqueIds.join(',')
+      }
+    }
+
+    const response = await WordPressAPI.get(`/categories`, reqConfig);
+    return response.data;
+  }, [])
+
+  const fetchImages = useCallback(async (ids: number[]): Promise<tImage[]> => {
+
+    // Mehrfach auftretende IDs entfernen
+    const uniqueIds = Array.from(new Set(ids));
+
+    const reqConfig: AxiosRequestConfig = {
+      params: {
+        per_page: uniqueIds.length,
+        _fields: ['id', 'media_details', 'alt_text'].join(','),
+        include: uniqueIds.join(',')
+      }
+    }
+
+    const response = await WordPressAPI.get(`/media`, reqConfig);
+    return response.data.map((image: tImageOG) => ({
+      id: image.id,
+      thumbnail: image.media_details.sizes.thumbnail,
+      full: image.media_details.sizes.full,
+      alt_text: image.alt_text
+    }));
+  }, [])
+
   const fetchPosts = useCallback(async (pageNumber: number) => {
     const reqConfig: AxiosRequestConfig = {
       params: {
@@ -85,68 +146,7 @@ const Feed = () => {
         children: 'Posts konnten nicht geladen werden.'
       })
     }
-  }, [setAlert]);
-
-  const fetchAuthors = async (ids: number[]) => {
-    
-    // Mehrfach auftretende IDs entfernen
-    const uniqueIds = Array.from(new Set(ids));
-
-    const reqConfig: AxiosRequestConfig = {
-      params: {
-        per_page: uniqueIds.length,
-        _fields: ['id', 'name', 'link', 'avatar_urls'].join(','),
-        include: uniqueIds.join(',')
-      }
-    }
-
-    const response = await WordPressAPI.get(`/users`, reqConfig);
-    return response.data.map((author: tAuhtorOG) => ({
-      id: author.id,
-      name: author.name,
-      url: author.link,
-      avatar: author.avatar_urls[96] || author.avatar_urls[48] || author.avatar_urls[24] || null
-    }));
-  }
-
-  const fetchCategories = async (ids: number[]) => {
-
-    // Mehrfach auftretende IDs entfernen
-    const uniqueIds = Array.from(new Set(ids));
-
-    const reqConfig: AxiosRequestConfig = {
-      params: {
-        per_page: uniqueIds.length,
-        _fields: ['id', 'name'].join(','),
-        include: uniqueIds.join(',')
-      }
-    }
-
-    const response = await WordPressAPI.get(`/categories`, reqConfig);
-    return response.data;
-  }
-
-  const fetchImages = async (ids: number[]): Promise<tImage[]> => {
-
-    // Mehrfach auftretende IDs entfernen
-    const uniqueIds = Array.from(new Set(ids));
-
-    const reqConfig: AxiosRequestConfig = {
-      params: {
-        per_page: uniqueIds.length,
-        _fields: ['id', 'media_details', 'alt_text'].join(','),
-        include: uniqueIds.join(',')
-      }
-    }
-
-    const response = await WordPressAPI.get(`/media`, reqConfig);
-    return response.data.map((image: tImageOG) => ({
-      id: image.id,
-      thumbnail: image.media_details.sizes.thumbnail,
-      full: image.media_details.sizes.full,
-      alt_text: image.alt_text
-    }));
-  }
+  }, [setAlert, fetchAuthors, fetchCategories, fetchImages]);
 
   useEffect(() => {
     const handleScroll = () => {
